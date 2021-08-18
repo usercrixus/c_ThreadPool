@@ -27,7 +27,7 @@ int enqueue(Task* t, ThreadPool* threadPool)
 Task* dequeue(ThreadPool* threadPool){
     pthread_mutex_lock(&threadPool->dequeueMutex); // protected area
 
-    if(threadPool->head == NULL && threadPool->active == true){
+    while(threadPool->head == NULL && threadPool->active == true){
         pthread_cond_wait(&threadPool->cond, &threadPool->dequeueMutex); // if pool is null we cant dequeue so we wait
     }
     if(threadPool->head == NULL && !threadPool->active == false){
