@@ -11,7 +11,6 @@ int enqueue(Task* t, ThreadPool* threadPool)
 
     if(threadPool->head == NULL){
         threadPool->head = t; // assign task to the pool
-        pthread_cond_signal(&threadPool->cond); // the pool was empty so we have to relaunch (try to relaunch) it
     }else{
         Task* buff = threadPool->head;
         while(buff->next != NULL){
@@ -19,6 +18,7 @@ int enqueue(Task* t, ThreadPool* threadPool)
         }
         buff->next = t; // put task at the end of the pool
     }
+    pthread_cond_signal(&threadPool->cond); // try to wake up a thread for the new task
 
     pthread_mutex_unlock(&threadPool->dequeueMutex); // end of protected area
     return 0;
@@ -51,6 +51,7 @@ void *worker(void *param){
     ThreadPool* threadPool = (ThreadPool*)param; // convert param to ThreadPool
     Task* worktodo; // this is the object who will be dequeue
     while((worktodo = dequeue(threadPool)) != NULL){ // if dequeue return null, pool_shutdown have been call and the pool is empty so, we leave the thread
+    printf("thread id : %lu | ", pthread_self());
         execute(worktodo->function, worktodo->data); // execute function with params
         free(worktodo); // avoid memory leaks
     }
