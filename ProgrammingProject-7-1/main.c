@@ -23,7 +23,7 @@ int main(void){
 
 
     // initialize the thread pool
-    ThreadPool* threadPool = pool_init(1);
+    ThreadPool* threadPool = pool_init(3);
     sleep(1); // test with & without
 
     // submit the work to the queue
