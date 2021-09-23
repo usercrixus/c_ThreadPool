@@ -15,7 +15,7 @@ typedef struct list{
     Task* head; // linked list of task
     pthread_mutex_t dequeueMutex; // mutex to handle the queue
     pthread_t* pool; // array of threads
-    int size; // this of the array of threads
+    int size; // size of the array of threads
     pthread_cond_t cond; // stop and go condition
     bool active; // status of the pool (usable/unusable)
 }ThreadPool ;
