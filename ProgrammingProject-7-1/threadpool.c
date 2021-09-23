@@ -30,7 +30,7 @@ Task* dequeue(ThreadPool* threadPool){
     while(threadPool->head == NULL && threadPool->active == true){
         pthread_cond_wait(&threadPool->cond, &threadPool->dequeueMutex); // if pool is null we cant dequeue so we wait
     }
-    if(threadPool->head == NULL && !threadPool->active == false){
+    if(threadPool->head == NULL && threadPool->active == false){
         pthread_mutex_unlock(&threadPool->dequeueMutex); // if pool is close and null we return null as we broke the thread while loop condition
         return NULL;
     }
